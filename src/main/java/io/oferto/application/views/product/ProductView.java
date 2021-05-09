@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
@@ -26,10 +27,10 @@ import io.oferto.application.backend.service.ProductService;
 import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.product.form.ProductForm;
 
-@SuppressWarnings("serial")
 @RouteAlias(value = "", layout = MainView.class)
 @Route(value = "products", layout = MainView.class)
-@PageTitle("Product Master")
+@PageTitle("Product Manager | Product Master")
+@CssImport("./views/product/product-view.css")
 public class ProductView extends VerticalLayout {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -44,6 +45,8 @@ public class ProductView extends VerticalLayout {
 	private Grid<Product> gridProduct = new Grid<>(Product.class); 
 	
 	public ProductView(ProductService productService) {
+		addClassName("product-view");
+		
 		this.setSizeFull();
 		this.setPadding(true);
 		
@@ -130,19 +133,24 @@ public class ProductView extends VerticalLayout {
 	
 	private Button updateProductButton(Grid<Product> grid, Product item) {
 	    Button button = new Button("Update", clickEvent -> {
-	    	// define dialog
+	    	// define form dialog
 	    	ProductForm productForm = new ProductForm();
 	    	productForm.setWidth("700px");
 	    	productForm.setCloseOnEsc(true);			
-	    	productForm.setCloseOnOutsideClick(false);	    
+	    	productForm.setCloseOnOutsideClick(false);
 	    	
+	    	// bind form dialog with product entity
+	    	productForm.setProduct(item);
+	    	
+	    	// define form dialog view callback
 	    	productForm.addOpenedChangeListener(event -> {
 	    	     if(!event.isOpened()) {	    	    	 
-	    	    	 if (productForm.getProduct() != null)
+	    	    	 if (productForm.getDialogResult() == ProductForm.DIALOG_RESULT.SAVE)
 	    	    		 Notification.show("Product Saved");
 	    	     }
 	    	});
-	    		    	
+	    		
+	    	// open form dialog view
 	    	productForm.open();
 	    });
 	    

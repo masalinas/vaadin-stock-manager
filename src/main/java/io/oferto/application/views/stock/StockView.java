@@ -4,14 +4,13 @@ import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -19,9 +18,9 @@ import io.oferto.application.backend.model.Stock;
 import io.oferto.application.backend.service.StockService;
 import io.oferto.application.views.main.MainView;
 
-@SuppressWarnings("serial")
 @Route(value = "stock", layout = MainView.class)
-@PageTitle("Stock List")
+@PageTitle("Product Manager | Stock List")
+@CssImport("./views/stock/stock-view.css")
 public class StockView extends VerticalLayout {
 	private StockService stockService;
 	
@@ -34,6 +33,8 @@ public class StockView extends VerticalLayout {
 	private Grid<Stock> gridStock = new Grid<>(Stock.class);
 	
 	public StockView(StockService stockService) {
+		addClassName("stock-view");
+		
 		this.setSizeFull();
 		this.setPadding(true);
 		

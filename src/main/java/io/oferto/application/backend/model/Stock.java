@@ -38,7 +38,7 @@ public class Stock extends AbstractEntity {
 	private String serialNumber;
 	
 	@NotNull
-	private float quantity;
+	private Double quantity;
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
@@ -76,11 +76,11 @@ public class Stock extends AbstractEntity {
 		this.serialNumber = serialNumber;
 	}
 
-	public float getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(float quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 

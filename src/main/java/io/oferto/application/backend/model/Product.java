@@ -41,7 +41,7 @@ public class Product extends AbstractEntity implements Cloneable {
 	private Family family;
 		
 	@NotNull
-	private float price;
+	private Double price;
 	
 	@NotNull
 	private boolean active = true;
@@ -73,10 +73,10 @@ public class Product extends AbstractEntity implements Cloneable {
 		this.description = description;
 	}
 	
-	public float getPrice() {
+	public Double getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 	
