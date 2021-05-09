@@ -1,8 +1,5 @@
 package io.oferto.application.views.product.form;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +20,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.Result;
-import com.vaadin.flow.data.binder.ValueContext;
-import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.data.binder.ValidationException;
 
 import io.oferto.application.backend.model.Product;
 import io.oferto.application.backend.model.Product.Family;
@@ -46,32 +41,13 @@ public class ProductForm extends Dialog {
 	private ComboBox<Family> family;
 	private NumberField price;
 	private Checkbox active;
-	
-	/*public class DoubleToIntegerConverter implements Converter<Double, Integer> {		
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		    public Result<Integer> convertToModel(Double aDouble, ValueContext valueContext) {				
-		        return Result.ok(aDouble.intValue());				
-		    }
-
-		    @Override
-		    public Double convertToPresentation(Integer integer, ValueContext valueContext) {
-		    	return integer.doubleValue();
-		    }
-	}*/
-	
+		
 	public ProductForm() {
 		super();
 							
 		// create dialog layout
 		add(createTitle(), createFormLayout(), new Hr(), createToolbarLayout());
 		
-		// bind dialog form
-		/*productBinder.forField(price)
-			.asRequired()
-			.withConverter(new DoubleToIntegerConverter()).bind("price");*/
-				
 		productBinder.bindInstanceFields(this);
 	}
 	
@@ -82,7 +58,7 @@ public class ProductForm extends Dialog {
 	public void setProduct(Product product) {
 		this.product = product;
 		
-		productBinder.setBean(product);
+		productBinder.readBean(product);
 	}
 	
 	public Product getProduct() {
@@ -140,10 +116,17 @@ public class ProductForm extends Dialog {
 	private Component createToolbarLayout() {		
 		Button saveButton = new Button("Confirm", event -> {
 			// retreive the product updated from form
-			this.dialogResult = DIALOG_RESULT.SAVE;
-			this.product = new Product();
+			this.dialogResult = DIALOG_RESULT.SAVE;			
 			
-		    close();
+			try {
+				productBinder.writeBean(product);
+				
+		        close();
+		    } catch (ValidationException ex) {
+		        ex.printStackTrace();
+		        
+		        logger.error(ex.getMessage());
+		    }					   
 		});
 		saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		saveButton.addClickShortcut(Key.ENTER).listenOn(this);
@@ -151,6 +134,7 @@ public class ProductForm extends Dialog {
 		
 		Button cancelButton = new Button("Cancel", event -> {
 			this.dialogResult = DIALOG_RESULT.CANEL;
+			
 		    close();
 		});
 		

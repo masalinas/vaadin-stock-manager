@@ -2,6 +2,9 @@ package io.oferto.application.views.stock;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -22,6 +25,9 @@ import io.oferto.application.views.main.MainView;
 @PageTitle("Product Manager | Stock List")
 @CssImport("./views/stock/stock-view.css")
 public class StockView extends VerticalLayout {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final int NOTIFICATION_DEFAULT_DURATION = 5000;
+	
 	private StockService stockService;
 	
 	private List<Stock> stock;
@@ -53,7 +59,6 @@ public class StockView extends VerticalLayout {
 	private void loadData() {
 		try {
 			this.stock = stockService.findAll();
-			//Notification.show("SamplePerson details stored.");
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();			

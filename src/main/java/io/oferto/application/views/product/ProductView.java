@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -33,6 +34,7 @@ import io.oferto.application.views.product.form.ProductForm;
 @CssImport("./views/product/product-view.css")
 public class ProductView extends VerticalLayout {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final int NOTIFICATION_DEFAULT_DURATION = 5000;
 	
 	private ProductService productService;
 	
@@ -78,9 +80,7 @@ public class ProductView extends VerticalLayout {
 		toolBarLayout.setPadding(true);
 		toolBarLayout.setWidthFull();
 		
-		addProduct = new Button("Add Product", clickEvent -> {
-			 
-		});
+		addProduct = new Button("Add Product", clickEvent -> createProductButton(clickEvent));		
 		addProduct.getElement().getStyle().set("margin-right", "auto");
 		addProduct.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		
@@ -131,7 +131,55 @@ public class ProductView extends VerticalLayout {
 		gridProduct.setDataProvider(productProvider);
 	}
 	
-	private Button updateProductButton(Grid<Product> grid, Product item) {
+	private void refreshProducts(ClickEvent e) {
+		try {
+			// load data from service
+			loadData();
+		 
+		 	// fill grid with data
+		 	loadGrid();
+		} catch (Exception ex) {
+	    	logger.error(ex.getMessage());
+	    	
+	    	Notification.show(ex.getMessage());
+	    }
+	}
+	
+	private void createProductButton(ClickEvent e) {
+		// define form dialog
+    	ProductForm productForm = new ProductForm();
+    	productForm.setWidth("700px");
+    	productForm.setCloseOnEsc(true);			
+    	productForm.setCloseOnOutsideClick(false);
+    	
+    	// bind form dialog with product entity
+    	productForm.setProduct(new Product());
+    	
+    	// define form dialog view callback
+    	productForm.addOpenedChangeListener(event -> {
+    	     if(!event.isOpened()) {	    	    	 
+    	    	 if (productForm.getDialogResult() == ProductForm.DIALOG_RESULT.SAVE)	    	    	 
+    	    	 	try {
+    	    	 		// save product entity
+    	    	 		productService.save(productForm.getProduct());
+    	    	 		
+    	    	 		// refresh grid
+    	    	 		refreshProducts(null);
+    	    	 		
+	    	    	 	Notification.show("Product Saved", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    	    } catch (Exception ex) {
+    	    	    	logger.error(ex.getMessage());
+    	    	    	
+    	    	    	Notification.show(ex.getMessage(), NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    	    }	    	    	
+    	     }
+    	});
+    		
+    	// open form dialog view
+    	productForm.open();
+	}
+	
+	private Button updateProductButton(Grid<Product> grid, Product product) {
 	    Button button = new Button("Update", clickEvent -> {
 	    	// define form dialog
 	    	ProductForm productForm = new ProductForm();
@@ -140,13 +188,26 @@ public class ProductView extends VerticalLayout {
 	    	productForm.setCloseOnOutsideClick(false);
 	    	
 	    	// bind form dialog with product entity
-	    	productForm.setProduct(item);
+	    	productForm.setProduct(product);
 	    	
 	    	// define form dialog view callback
 	    	productForm.addOpenedChangeListener(event -> {
 	    	     if(!event.isOpened()) {	    	    	 
-	    	    	 if (productForm.getDialogResult() == ProductForm.DIALOG_RESULT.SAVE)
-	    	    		 Notification.show("Product Saved");
+	    	    	 if (productForm.getDialogResult() == ProductForm.DIALOG_RESULT.SAVE)	    	    	 
+	    	    	 	try {
+	    	    	 		// save product entity
+	    	    	 		productService.save(productForm.getProduct());
+	    	    	 		
+	    	    	 		// refresh grid
+	    	    	 		//loadGrid();
+	    	    	 		refreshProducts(null);
+	    	    	 		
+		    	    	 	Notification.show("Product Updated", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+	    	    	    } catch (Exception ex) {
+	    	    	    	logger.error(ex.getMessage());
+	    	    	    	
+	    	    	    	Notification.show(ex.getMessage(), NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+	    	    	    }	    	    	
 	    	     }
 	    	});
 	    		
@@ -157,14 +218,24 @@ public class ProductView extends VerticalLayout {
 	    return button;
 	}
 	
-	private Button removeRemoveButton(Grid<Product> grid, Product item) {
+	private Button removeRemoveButton(Grid<Product> grid, Product product) {
 	    @SuppressWarnings("unchecked")
-	    Button button = new Button("Remove", clickEvent -> {
-	        ListDataProvider<Product> dataProvider = (ListDataProvider<Product>) grid.getDataProvider();
-	        
-	        dataProvider.getItems().remove(item);
-	        dataProvider.refreshAll();
+	    Button button = new Button("Remove", clickEvent -> {	        
+	        try {	        
+    	 		// save product entity
+    	 		productService.delete(product);
+    	 		
+    	 		// refresh grid
+    	 		refreshProducts(null);
+    	        
+	    	 	Notification.show("Product Deleted", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    } catch (Exception ex) {
+    	    	logger.error(ex.getMessage());
+    	    	
+    	    	Notification.show(ex.getMessage(), NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    }	        
 	    });
+	    
 	    button.addThemeVariants(ButtonVariant.LUMO_ERROR);
 	    
 	    return button;

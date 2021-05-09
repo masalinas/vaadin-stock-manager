@@ -21,3 +21,5 @@ A Vaadin Flow PoC to manage stock in a organization
 
 # start docker container
 ./docker-start-container.sh 
+
+![image](https://user-images.githubusercontent.com/1216181/117584292-6c527800-b10c-11eb-8952-ff5f35728332.png)
