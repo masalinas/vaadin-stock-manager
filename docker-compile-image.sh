@@ -1,0 +1,1 @@
+docker build -t vaadin-stock-manager:latest .
