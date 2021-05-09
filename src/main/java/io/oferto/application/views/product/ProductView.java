@@ -75,6 +75,13 @@ public class ProductView extends VerticalLayout {
 		}
 	}
 
+	private void loadGrid() {
+		productProvider =  DataProvider.ofCollection(this.products);
+		productProvider.setSortOrder(Product::getName, SortDirection.ASCENDING);
+		
+		gridProduct.setDataProvider(productProvider);
+	}
+	
 	private void createViewLayout() {
 		toolBarLayout = new HorizontalLayout();
 		toolBarLayout.setPadding(true);
@@ -84,13 +91,7 @@ public class ProductView extends VerticalLayout {
 		addProduct.getElement().getStyle().set("margin-right", "auto");
 		addProduct.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		
-		refreshProducts = new Button("Refresh Products", clickEvent -> {
-			// load data from service
-			 loadData();
-			 
-			// fill grid with data
-			 loadGrid();
-		});		
+		refreshProducts = new Button("Refresh Products", clickEvent -> refreshProducts(clickEvent));		
 		
 		toolBarLayout.add(addProduct, refreshProducts);
 		
@@ -123,14 +124,7 @@ public class ProductView extends VerticalLayout {
 									 GridVariant.LUMO_NO_ROW_BORDERS, 
 									 GridVariant.LUMO_ROW_STRIPES);
 	}
-	
-	private void loadGrid() {
-		productProvider =  DataProvider.ofCollection(this.products);
-		productProvider.setSortOrder(Product::getName, SortDirection.ASCENDING);
 		
-		gridProduct.setDataProvider(productProvider);
-	}
-	
 	private void refreshProducts(ClickEvent e) {
 		try {
 			// load data from service
@@ -219,7 +213,6 @@ public class ProductView extends VerticalLayout {
 	}
 	
 	private Button removeRemoveButton(Grid<Product> grid, Product product) {
-	    @SuppressWarnings("unchecked")
 	    Button button = new Button("Remove", clickEvent -> {	        
 	        try {	        
     	 		// save product entity

@@ -5,11 +5,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -17,9 +19,13 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import io.oferto.application.backend.model.Product;
 import io.oferto.application.backend.model.Stock;
+import io.oferto.application.backend.service.ProductService;
 import io.oferto.application.backend.service.StockService;
 import io.oferto.application.views.main.MainView;
+import io.oferto.application.views.product.form.ProductForm;
+import io.oferto.application.views.stock.form.StockForm;
 
 @Route(value = "stock", layout = MainView.class)
 @PageTitle("Product Manager | Stock List")
@@ -28,6 +34,7 @@ public class StockView extends VerticalLayout {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static final int NOTIFICATION_DEFAULT_DURATION = 5000;
 	
+	private ProductService productService;
 	private StockService stockService;
 	
 	private List<Stock> stock;
@@ -38,12 +45,13 @@ public class StockView extends VerticalLayout {
 	private Button addStock;
 	private Grid<Stock> gridStock = new Grid<>(Stock.class);
 	
-	public StockView(StockService stockService) {
+	public StockView(ProductService productService, StockService stockService) {
 		addClassName("stock-view");
 		
 		this.setSizeFull();
 		this.setPadding(true);
 		
+		this.productService = productService;
 		this.stockService = stockService;
 		
 		// load data from service
@@ -61,8 +69,30 @@ public class StockView extends VerticalLayout {
 			this.stock = stockService.findAll();
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();			
+			ex.printStackTrace();
+			
+			logger.debug(ex.getLocalizedMessage());
 		}
+	}
+	
+	private void loadGrid() {
+		stockProvider =  DataProvider.ofCollection(this.stock);
+		
+		gridStock.setDataProvider(stockProvider);
+	}
+	
+	private void refreshStocks(ClickEvent e) {
+		try {
+			// load data from service
+			loadData();
+		 
+		 	// fill grid with data
+		 	loadGrid();
+		} catch (Exception ex) {
+	    	logger.error(ex.getMessage());
+	    	
+	    	Notification.show(ex.getMessage());
+	    }
 	}
 	
 	private void createViewLayout() {
@@ -70,19 +100,12 @@ public class StockView extends VerticalLayout {
 		toolBarLayout.setPadding(true);
 		toolBarLayout.setWidthFull();
 		
-		addStock = new Button("Add Stock", clickEvent -> {
-			 
-		});
+		addStock = new Button("Add Stock", clickEvent -> createStockButton(clickEvent));
+		
 		addStock.getElement().getStyle().set("margin-right", "auto");
 		addStock.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		
-		refreshStock = new Button("Refresh Stock", clickEvent -> {
-			// load data from service
-			 loadData();
-			 
-			// fill grid with data
-			 loadGrid();
-		});		
+		refreshStock = new Button("Refresh Stock", clickEvent -> refreshStocks(clickEvent));		
 		
 		toolBarLayout.add(addStock, refreshStock);
 		
@@ -105,33 +128,96 @@ public class StockView extends VerticalLayout {
 								   GridVariant.LUMO_ROW_STRIPES);
 	}
 	
-	private void loadGrid() {
-		stockProvider =  DataProvider.ofCollection(this.stock);
-		
-		gridStock.setDataProvider(stockProvider);
-		//gridProduct.getDataProvider().refreshAll();
+	private void createStockButton(ClickEvent e) {
+		// define form dialog
+    	StockForm stockForm = new StockForm(productService);
+    	stockForm.setWidth("700px");
+    	stockForm.setCloseOnEsc(true);			
+    	stockForm.setCloseOnOutsideClick(false);
+    	
+    	// bind form dialog with product entity
+    	stockForm.setStock(new Stock());
+    	
+    	// define form dialog view callback
+    	stockForm.addOpenedChangeListener(event -> {
+    	     if(!event.isOpened()) {	    	    	 
+    	    	 if (stockForm.getDialogResult() == StockForm.DIALOG_RESULT.SAVE)	    	    	 
+    	    	 	try {
+    	    	 		// save product entity
+    	    	 		stockService.save(stockForm.getStock());
+    	    	 		
+    	    	 		// refresh grid
+    	    	 		refreshStocks(null);
+    	    	 		
+	    	    	 	Notification.show("St6ock Saved", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    	    } catch (Exception ex) {
+    	    	    	logger.error(ex.getMessage());
+    	    	    	
+    	    	    	Notification.show(ex.getMessage(), NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    	    }	    	    	
+    	     }
+    	});
+    		
+    	// open form dialog view
+    	stockForm.open();
 	}
 	
-	private Button updateStockButton(Grid<Stock> grid, Stock item) {
-	    @SuppressWarnings("unchecked")
-	    Button button = new Button("Update", clickEvent -> {
-	        /*ListDataProvider<Product> dataProvider = (ListDataProvider<Product>) grid.getDataProvider();
-	        
-	        dataProvider.getItems().remove(item);	        
-	        dataProvider.refreshAll();*/
+	private Button updateStockButton(Grid<Stock> grid, Stock stock) {
+		Button button = new Button("Update", clickEvent -> {
+			// define form dialog
+	    	StockForm stockForm = new StockForm(productService);
+	    	stockForm.setWidth("700px");
+	    	stockForm.setCloseOnEsc(true);			
+	    	stockForm.setCloseOnOutsideClick(false);
+	    	
+	    	// bind form dialog with product entity
+	    	stockForm.setStock(stock);
+	    	
+	    	// define form dialog view callback
+	    	stockForm.addOpenedChangeListener(event -> {
+	    	     if(!event.isOpened()) {	    	    	 
+	    	    	 if (stockForm.getDialogResult() == StockForm.DIALOG_RESULT.SAVE)	    	    	 
+	    	    	 	try {
+	    	    	 		// save product entity
+	    	    	 		stockService.save(stockForm.getStock());
+	    	    	 		
+	    	    	 		// refresh grid
+	    	    	 		//loadGrid();
+	    	    	 		refreshStocks(null);
+	    	    	 		
+		    	    	 	Notification.show("Stock Updated", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+	    	    	    } catch (Exception ex) {
+	    	    	    	logger.error(ex.getMessage());
+	    	    	    	
+	    	    	    	Notification.show(ex.getMessage(), NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+	    	    	    }	    	    	
+	    	     }
+	    	});
+	    		
+	    	// open form dialog view
+	    	stockForm.open();
 	    });
 	    
 	    return button;
 	}
 	
-	private Button removeStockButton(Grid<Stock> grid, Stock item) {
-	    @SuppressWarnings("unchecked")
-	    Button button = new Button("Remove", clickEvent -> {
-	        ListDataProvider<Stock> dataProvider = (ListDataProvider<Stock>) grid.getDataProvider();
-	        
-	        dataProvider.getItems().remove(item);
-	        dataProvider.refreshAll();
+	private Button removeStockButton(Grid<Stock> grid, Stock stock) {
+	    Button button = new Button("Remove", clickEvent -> {	        
+	        try {	        
+    	 		// save product entity
+    	 		stockService.delete(stock);
+    	 		
+    	 		// refresh grid
+    	 		refreshStocks(null);
+    	        
+	    	 	Notification.show("Stock Deleted", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    } catch (Exception ex) {
+    	    	logger.error(ex.getMessage());
+    	    	
+    	    	Notification.show(ex.getMessage(), NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);
+    	    }	        
 	    });
+	    
 	    button.addThemeVariants(ButtonVariant.LUMO_ERROR);
 	    
 	    return button;
