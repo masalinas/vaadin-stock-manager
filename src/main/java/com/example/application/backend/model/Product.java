@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Product extends AbstractEntity implements Cloneable {
 	public enum Family {
-		PERISHABLE("Perecederos"),
+		PERISHABLE("Perishable"),
 		ELECTRONICS("Electronic"),
-	    FASHION("Moda");
+	    FASHION("Fashion");
 
 	    public final String label;
 

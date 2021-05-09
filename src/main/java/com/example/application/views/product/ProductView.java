@@ -1,10 +1,16 @@
 package com.example.application.views.product;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -13,19 +19,20 @@ import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-
-import java.util.List;
+import com.vaadin.flow.router.RouteAlias; 
 
 import com.example.application.backend.model.Product;
 import com.example.application.backend.service.ProductService;
 import com.example.application.views.main.MainView;
-import com.vaadin.flow.router.RouteAlias;
+import com.example.application.views.product.form.ProductForm;
 
 @SuppressWarnings("serial")
 @RouteAlias(value = "", layout = MainView.class)
 @Route(value = "products", layout = MainView.class)
 @PageTitle("Product Master")
 public class ProductView extends VerticalLayout {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private ProductService productService;
 	
 	private List<Product> products;
@@ -57,7 +64,9 @@ public class ProductView extends VerticalLayout {
 			this.products = productService.findAll();
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();			
+			ex.printStackTrace();
+			
+			logger.debug(ex.getLocalizedMessage());
 		}
 	}
 
@@ -117,16 +126,24 @@ public class ProductView extends VerticalLayout {
 		productProvider.setSortOrder(Product::getName, SortDirection.ASCENDING);
 		
 		gridProduct.setDataProvider(productProvider);
-		//gridProduct.getDataProvider().refreshAll();
 	}
 	
 	private Button updateProductButton(Grid<Product> grid, Product item) {
-	    @SuppressWarnings("unchecked")
 	    Button button = new Button("Update", clickEvent -> {
-	        /*ListDataProvider<Product> dataProvider = (ListDataProvider<Product>) grid.getDataProvider();
-	        
-	        dataProvider.getItems().remove(item);	        
-	        dataProvider.refreshAll();*/
+	    	// define dialog
+	    	ProductForm productForm = new ProductForm();
+	    	productForm.setWidth("700px");
+	    	productForm.setCloseOnEsc(true);			
+	    	productForm.setCloseOnOutsideClick(false);	    
+	    	
+	    	productForm.addOpenedChangeListener(event -> {
+	    	     if(!event.isOpened()) {	    	    	 
+	    	    	 if (productForm.getProduct() != null)
+	    	    		 Notification.show("Product Saved");
+	    	     }
+	    	});
+	    		    	
+	    	productForm.open();
 	    });
 	    
 	    return button;

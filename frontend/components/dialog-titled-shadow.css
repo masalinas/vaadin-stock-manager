@@ -1,0 +1,3 @@
+:host([theme="dialog-titled"]) div[part="content"] {
+    padding: 1px;
+}

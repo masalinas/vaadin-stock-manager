@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -50,6 +51,7 @@ public class StockView extends VerticalLayout {
 	private void loadData() {
 		try {
 			this.stock = stockService.findAll();
+			//Notification.show("SamplePerson details stored.");
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();			
