@@ -107,7 +107,12 @@
             <artifactId>vaadin-testbench</artifactId>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+   			<groupId>com.vaadin</groupId>
+   			<artifactId>leaflet4vaadin</artifactId>
+   			<version>0.5.0</version>
+		</dependency>
+
         <!-- Spring dependencies -->
         <dependency>
             <groupId>com.vaadin</groupId>

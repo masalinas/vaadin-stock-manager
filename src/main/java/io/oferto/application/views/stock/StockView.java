@@ -1,6 +1,8 @@
 package io.oferto.application.views.stock;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,24 +18,30 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.Location;
+import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
-import io.oferto.application.backend.model.Product;
 import io.oferto.application.backend.model.Stock;
+import io.oferto.application.backend.model.Warehouse;
 import io.oferto.application.backend.service.ProductService;
 import io.oferto.application.backend.service.StockService;
+import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
-import io.oferto.application.views.product.form.ProductForm;
 import io.oferto.application.views.stock.form.StockForm;
 
 @Route(value = "stock", layout = MainView.class)
 @PageTitle("Product Manager | Stock List")
 @CssImport("./views/stock/stock-view.css")
-public class StockView extends VerticalLayout {
+public class StockView extends VerticalLayout implements HasUrlParameter<String> {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static final int NOTIFICATION_DEFAULT_DURATION = 5000;
 	
+	private WarehouseService warehouseService;
 	private ProductService productService;
 	private StockService stockService;
 	
@@ -45,17 +53,18 @@ public class StockView extends VerticalLayout {
 	private Button addStock;
 	private Grid<Stock> gridStock = new Grid<>(Stock.class);
 	
-	public StockView(ProductService productService, StockService stockService) {
+	public StockView(WarehouseService warehouseService,ProductService productService, StockService stockService) {
 		addClassName("stock-view");
 		
 		this.setSizeFull();
 		this.setPadding(true);
 		
+		this.warehouseService = warehouseService;
 		this.productService = productService;
 		this.stockService = stockService;
 		
 		// load data from service
-		loadData();
+		loadStocks();
 		
 		// fill grid with data
 		configureGrid();
@@ -64,9 +73,40 @@ public class StockView extends VerticalLayout {
 		createViewLayout();
 	}
 	
-	private void loadData() {
+	@Override
+	public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+	    Location location = event.getLocation();
+	    QueryParameters queryParameters = location.getQueryParameters();
+
+	    Map<String, List<String>> parametersMap = queryParameters.getParameters();
+	    
+	    if (parametersMap.get("warehouseId") != null) {
+	    	int warehouseId = Integer.parseInt(parametersMap.get("warehouseId").get(0));
+	    	
+	    	getStockByWarehouse(warehouseId);
+	    }
+	}
+	
+	private void loadStocks() {
 		try {
 			this.stock = stockService.findAll();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			
+			logger.debug(ex.getLocalizedMessage());
+		}
+	}
+	
+	private void getStockByWarehouse(int warehouseId) {
+		try {
+			Optional<Warehouse> warehouse = warehouseService.findById(warehouseId);
+			
+			if (!warehouse.isEmpty()) {
+				this.stock = warehouse.get().getStocks(); 
+				
+				loadGrid();
+			}
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -84,7 +124,7 @@ public class StockView extends VerticalLayout {
 	private void refreshStocks(ClickEvent e) {
 		try {
 			// load data from service
-			loadData();
+			loadStocks();
 		 
 		 	// fill grid with data
 		 	loadGrid();

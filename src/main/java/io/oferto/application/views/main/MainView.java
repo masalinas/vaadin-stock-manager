@@ -21,6 +21,7 @@ import com.vaadin.flow.server.PWA;
 
 import io.oferto.application.views.about.AboutView;
 import io.oferto.application.views.main.MainView;
+import io.oferto.application.views.map.DashboardView;
 import io.oferto.application.views.product.ProductView;
 import io.oferto.application.views.stock.StockView;
 
@@ -98,9 +99,10 @@ public class MainView extends AppLayout {
         return tabs;
     }
 
-    private Component[] createMenuItems() {
-        return new Tab[]{createTab("Product Master", ProductView.class), 
-        				 createTab("Stock List", StockView.class),
+    private Component[] createMenuItems() {    	
+        return new Tab[]{createTab("Dashboard", DashboardView.class),
+        				 createTab("Product Master", ProductView.class),        				 
+        				 createTab("Stock List", StockView.class),        				 
         				 createTab("About", AboutView.class)};
     }
 

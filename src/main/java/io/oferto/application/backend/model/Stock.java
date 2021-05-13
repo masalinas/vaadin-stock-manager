@@ -28,6 +28,10 @@ public class Stock extends AbstractEntity {
 	}
 	
 	@ManyToOne
+	@JoinColumn(name = "warehouse_id")	
+	private Warehouse warehouse;
+	
+	@ManyToOne
 	@JoinColumn(name = "product_id")	
 	private Product product;
 			
@@ -35,7 +39,7 @@ public class Stock extends AbstractEntity {
 		
 	private String lot;
 	
-	private String serialNumber;
+	private String serialNumber;	
 	
 	@NotNull
 	private Double quantity;

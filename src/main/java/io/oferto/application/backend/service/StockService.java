@@ -29,7 +29,7 @@ public class StockService {
     public void delete(Stock stock) {
     	stockRepository.delete(stock);
     }
-
+    
     public void save(Stock stock) {
         if (stock == null) {
             LOGGER.log(Level.SEVERE,
