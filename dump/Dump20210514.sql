@@ -40,7 +40,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'Banana','Bananas from Canaria','PERISHABLE',10.9,1),(2,'Orange','Oranges from Valencia','PERISHABLE',11.7,0),(3,'iPhone6','iPhone 6 Apple Mobile','ELECTRONICS',120.9,1);
+INSERT INTO `product` VALUES (1,'Banana','Bananas from Canaria','PERISHABLE',10.9,1),(3,'iPhone6','iPhone 6 Apple Mobile','ELECTRONICS',120.9,1);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -53,6 +53,7 @@ DROP TABLE IF EXISTS `stock`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `stock` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `warehouse_id` int NOT NULL,
   `product_id` int NOT NULL,
   `quantity` double NOT NULL,
   `expiration_date` date DEFAULT NULL,
@@ -70,8 +71,36 @@ CREATE TABLE `stock` (
 
 LOCK TABLES `stock` WRITE;
 /*!40000 ALTER TABLE `stock` DISABLE KEYS */;
-INSERT INTO `stock` VALUES (2,1,30,'2021-09-30','1234567','','STORED'),(3,3,21,NULL,'','12345678','RESERVED');
+INSERT INTO `stock` VALUES (2,1,1,30,'2021-09-30','1234567','','STORED'),(3,2,3,21,NULL,'','12345678','RESERVED');
 /*!40000 ALTER TABLE `stock` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `warehouse`
+--
+
+DROP TABLE IF EXISTS `warehouse`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `warehouse` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `longitude` double NOT NULL,
+  `latitude` double NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `warehouse`
+--
+
+LOCK TABLES `warehouse` WRITE;
+/*!40000 ALTER TABLE `warehouse` DISABLE KEYS */;
+INSERT INTO `warehouse` VALUES (1,'Accme','Madrid',-3.7056721,40.4169019),(2,'La fabbrica Ternes',NULL,2.2770206,48.8588377);
+/*!40000 ALTER TABLE `warehouse` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -83,4 +112,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-09 22:26:36
+-- Dump completed on 2021-05-14  1:04:11
