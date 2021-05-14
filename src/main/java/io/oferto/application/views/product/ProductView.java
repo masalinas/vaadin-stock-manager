@@ -28,7 +28,6 @@ import io.oferto.application.backend.service.ProductService;
 import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.product.form.ProductForm;
 
-@RouteAlias(value = "", layout = MainView.class)
 @Route(value = "products", layout = MainView.class)
 @PageTitle("Product Manager | Product Master")
 @CssImport("./views/product/product-view.css")

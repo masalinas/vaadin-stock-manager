@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import io.oferto.application.backend.service.StockService;
 import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
 
+@RouteAlias(value = "", layout = MainView.class)
 @Route(value = "map", layout = MainView.class)
 @PageTitle("Product Manager | Dashboard")
 @CssImport("./views/map/map-view.css")
