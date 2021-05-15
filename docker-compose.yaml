@@ -10,9 +10,7 @@ services:
       - ./dump:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: underground
-      MYSQL_DATABASE: training
-      MYSQL_USER: stock
-      MYSQL_PASSWORD: training  
+      MYSQL_DATABASE: training  
     ports:
       - 3306:3306
             
