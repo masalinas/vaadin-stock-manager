@@ -1,4 +1,4 @@
-package io.oferto.application.views.map;
+package io.oferto.application.views.dashboard;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -29,10 +29,11 @@ import io.oferto.application.backend.service.StockService;
 import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
 
+//@Route(value = "", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
-@Route(value = "map", layout = MainView.class)
-@PageTitle("Product Manager | Dashboard")
-@CssImport("./views/map/map-view.css")
+@Route(value = "dashboard", layout = MainView.class)
+@PageTitle("Stock Manager | Dashboard")
+@CssImport("./views/dashboard/dashboard-view.css")
 public class DashboardView extends VerticalLayout {
 	private WarehouseService warehouseService;
 	private StockService stockService;

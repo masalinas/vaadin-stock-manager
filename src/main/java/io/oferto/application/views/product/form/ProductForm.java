@@ -97,17 +97,7 @@ public class ProductForm extends Dialog {
 		active = new Checkbox();
 		active.setId("active");
 		active.setLabel("Active");
-		
-		// define Layout
-		/*HorizontalLayout rowLayout01 = new HorizontalLayout();
-		rowLayout01.add(nameField, activeField);
-		
-		HorizontalLayout rowLayout02 = new HorizontalLayout();
-		rowLayout02.add(descriptionField);
-		
-		HorizontalLayout rowLayout03 = new HorizontalLayout();
-		rowLayout01.add(familyField, priceField);*/
-		
+				
 		formLayout.add(name, description, family, price, active);
 			
 		return formLayout;

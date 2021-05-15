@@ -35,7 +35,7 @@ import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.stock.form.StockForm;
 
 @Route(value = "stock", layout = MainView.class)
-@PageTitle("Product Manager | Stock List")
+@PageTitle("Stock Manager | Stock List")
 @CssImport("./views/stock/stock-view.css")
 public class StockView extends VerticalLayout implements HasUrlParameter<String> {
 	Logger logger = LoggerFactory.getLogger(this.getClass());

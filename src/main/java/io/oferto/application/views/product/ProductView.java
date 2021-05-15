@@ -29,7 +29,7 @@ import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.product.form.ProductForm;
 
 @Route(value = "products", layout = MainView.class)
-@PageTitle("Product Manager | Product Master")
+@PageTitle("Stock Manager | Product Master")
 @CssImport("./views/product/product-view.css")
 public class ProductView extends VerticalLayout {
 	Logger logger = LoggerFactory.getLogger(this.getClass());

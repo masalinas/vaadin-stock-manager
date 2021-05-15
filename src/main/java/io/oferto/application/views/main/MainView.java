@@ -7,6 +7,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -20,8 +21,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 
 import io.oferto.application.views.about.AboutView;
+import io.oferto.application.views.dashboard.DashboardView;
 import io.oferto.application.views.main.MainView;
-import io.oferto.application.views.map.DashboardView;
 import io.oferto.application.views.product.ProductView;
 import io.oferto.application.views.stock.StockView;
 
@@ -63,7 +64,8 @@ public class MainView extends AppLayout {
         
         layout.add(viewTitle);
  
-        layout.add(new Avatar());
+        //layout.add(new Avatar());
+        layout.add(createAvatarMenu());
         
         return layout;
     }
@@ -113,6 +115,24 @@ public class MainView extends AppLayout {
         return tab;
     }
 
+    private Component createAvatarMenu() {
+    	Avatar avatar = new Avatar();
+    	
+    	ContextMenu contextMenu = new ContextMenu();
+    	contextMenu.setOpenOnClick(true);
+    	contextMenu.setTarget(avatar);
+    	
+    	contextMenu.addItem("Profile", e -> {
+    	        	
+    	});
+
+    	contextMenu.addItem("Logout", e -> {
+    		contextMenu.getUI().ifPresent(ui -> ui.getPage().open("logout"));    		    		
+    	});
+    	
+    	return avatar;
+    }
+    
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
