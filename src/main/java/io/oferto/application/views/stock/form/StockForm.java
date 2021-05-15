@@ -29,10 +29,10 @@ import io.oferto.application.backend.model.Product;
 public class StockForm extends Dialog {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	public static enum DIALOG_RESULT {SAVE, CANEL};
+		
+	private DIALOG_RESULT dialogResult;
 	
 	private ProductService productService;
-	
-	private DIALOG_RESULT dialogResult;
 	
 	private Stock stock;	
 	private Binder<Stock> stockBinder = new Binder<Stock>(Stock.class);
@@ -130,6 +130,7 @@ public class StockForm extends Dialog {
 			
 			try {
 				stockBinder.writeBean(stock);
+				stock.setWarehouse(stock.getProduct().getWarehouse());
 				
 		        close();
 		    } catch (ValidationException ex) {

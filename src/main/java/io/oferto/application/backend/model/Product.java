@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -29,7 +31,11 @@ public class Product extends AbstractEntity implements Cloneable {
 	    	return label;
 	    }
 	}
-    
+
+	@ManyToOne
+	@JoinColumn(name = "warehouse_id")	
+	private Warehouse warehouse;
+	
     @NotNull
     @NotEmpty
 	private String name;
@@ -50,6 +56,14 @@ public class Product extends AbstractEntity implements Cloneable {
 	private List<Stock> stocks = new LinkedList<>();
 	  
 	public Product() {
+	}
+	
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
 	}
 	
 	public String getName() {

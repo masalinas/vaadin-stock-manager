@@ -48,6 +48,14 @@ public class Stock extends AbstractEntity {
 	@NotNull
 	private Status status;	
 	
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
+	
 	public Product getProduct() {
 		return product;
 	}

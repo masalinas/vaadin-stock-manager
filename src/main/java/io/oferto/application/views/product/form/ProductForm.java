@@ -1,5 +1,7 @@
 package io.oferto.application.views.product.form;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,27 +26,35 @@ import com.vaadin.flow.data.binder.ValidationException;
 
 import io.oferto.application.backend.model.Product;
 import io.oferto.application.backend.model.Product.Family;
+import io.oferto.application.backend.model.Warehouse;
+import io.oferto.application.backend.service.ProductService;
+import io.oferto.application.backend.service.WarehouseService;
 
 public class ProductForm extends Dialog {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	public static enum DIALOG_RESULT {SAVE, CANEL};
-	
+		
 	private DIALOG_RESULT dialogResult;
+	
+	private WarehouseService warehouseService;
 	
 	private Product product;	
 	private Binder<Product> productBinder = new Binder<Product>(Product.class);
 	
 	private FormLayout formLayout;
 	
+	private ComboBox<Warehouse> warehouse;
 	private TextField name;
 	private TextField description;
 	private ComboBox<Family> family;
 	private NumberField price;
 	private Checkbox active;
 		
-	public ProductForm() {
+	public ProductForm(WarehouseService warehouseService) {
 		super();
-							
+					
+		this.warehouseService = warehouseService;
+		
 		// create dialog layout
 		add(createTitle(), createFormLayout(), new Hr(), createToolbarLayout());
 		
@@ -65,6 +75,17 @@ public class ProductForm extends Dialog {
 		return this.product;
 	}
 	
+    private List<Warehouse> getWarehouses() {
+    	try {
+    		return warehouseService.findAll();
+		
+	    } catch (Exception ex) {
+	        logger.error(ex.getMessage());
+	        
+	        throw ex;
+	    }
+    }
+	  
     private Component createTitle() {
         return new H3("Product form");
     }
@@ -72,7 +93,13 @@ public class ProductForm extends Dialog {
 	private Component createFormLayout() {
 		formLayout = new FormLayout();
 		
-		// define form fields		
+		// define form fields
+		warehouse = new ComboBox<Warehouse>();		
+		warehouse.setId("warehouse");
+		warehouse.setItemLabelGenerator(Warehouse::getName);
+		warehouse.setLabel("Warehouse");
+		warehouse.setItems(getWarehouses());
+		
 		name = new TextField();
 		name.setId("name");			
 		name.setLabel("Name");
@@ -98,7 +125,7 @@ public class ProductForm extends Dialog {
 		active.setId("active");
 		active.setLabel("Active");
 				
-		formLayout.add(name, description, family, price, active);
+		formLayout.add(warehouse, active, name, description, family, price);
 			
 		return formLayout;
 	}

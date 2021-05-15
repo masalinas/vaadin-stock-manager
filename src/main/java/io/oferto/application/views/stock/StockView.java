@@ -53,7 +53,7 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 	private Button addStock;
 	private Grid<Stock> gridStock = new Grid<>(Stock.class);
 	
-	public StockView(WarehouseService warehouseService,ProductService productService, StockService stockService) {
+	public StockView(WarehouseService warehouseService, ProductService productService, StockService stockService) {
 		addClassName("stock-view");
 		
 		this.setSizeFull();
@@ -158,7 +158,8 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 	private void configureGrid() {
 		loadGrid();
 		
-		gridStock.setColumns("product.name", "quantity", "expirationDate", "lot", "serialNumber", "status");
+		gridStock.setColumns("product.warehouse.name", "product.name", "quantity", "expirationDate", "lot", "serialNumber", "status");
+		gridStock.getColumnByKey("product.warehouse.name").setHeader("Warehouse");
 		gridStock.getColumnByKey("product.name").setFooter("Total: " + this.stock.size() + " stock lines");		
 		
 		gridStock.addComponentColumn(item -> updateStockButton(gridStock, item)).setHeader("");

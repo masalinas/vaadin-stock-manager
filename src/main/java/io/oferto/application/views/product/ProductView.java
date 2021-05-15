@@ -25,6 +25,7 @@ import com.vaadin.flow.router.RouteAlias;
 
 import io.oferto.application.backend.model.Product;
 import io.oferto.application.backend.service.ProductService;
+import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.product.form.ProductForm;
 
@@ -35,6 +36,7 @@ public class ProductView extends VerticalLayout {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static final int NOTIFICATION_DEFAULT_DURATION = 5000;
 	
+	private WarehouseService warehouseService;
 	private ProductService productService;
 	
 	private List<Product> products;
@@ -45,12 +47,13 @@ public class ProductView extends VerticalLayout {
 	private Button addProduct;
 	private Grid<Product> gridProduct = new Grid<>(Product.class); 
 	
-	public ProductView(ProductService productService) {
+	public ProductView(WarehouseService warehouseService, ProductService productService) {
 		addClassName("product-view");
 		
 		this.setSizeFull();
 		this.setPadding(true);
 		
+		this.warehouseService = warehouseService;
 		this.productService = productService;
 		
 		// load data from service
@@ -103,7 +106,8 @@ public class ProductView extends VerticalLayout {
 	private void configureGrid() {
 		loadGrid();
 		
-		gridProduct.setColumns("name", "description", "family", "price");
+		gridProduct.setColumns("warehouse.name", "name", "description", "family", "price");
+		gridProduct.getColumnByKey("warehouse.name").setHeader("Warehouse");
 		gridProduct.getColumnByKey("name").setFooter("Total: " + this.products.size() + " products");		
 		gridProduct.addColumn(
                 new ComponentRenderer<>(
@@ -140,7 +144,7 @@ public class ProductView extends VerticalLayout {
 	
 	private void createProductButton(ClickEvent e) {
 		// define form dialog
-    	ProductForm productForm = new ProductForm();
+    	ProductForm productForm = new ProductForm(this.warehouseService);
     	productForm.setWidth("700px");
     	productForm.setCloseOnEsc(true);			
     	productForm.setCloseOnOutsideClick(false);
@@ -175,7 +179,7 @@ public class ProductView extends VerticalLayout {
 	private Button updateProductButton(Grid<Product> grid, Product product) {
 	    Button button = new Button("Update", clickEvent -> {
 	    	// define form dialog
-	    	ProductForm productForm = new ProductForm();
+	    	ProductForm productForm = new ProductForm(this.warehouseService);
 	    	productForm.setWidth("700px");
 	    	productForm.setCloseOnEsc(true);			
 	    	productForm.setCloseOnOutsideClick(false);
