@@ -26,11 +26,48 @@ spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
 # compile in production mode
 ./build-production.sh
 
-# create docker image
-./docker-compile-image.sh
+# Start Vaadin from step by step
+- build vaadin docker image
 
-# start docker container
-./docker-start-container.sh 
+```shell
+./docker-compile-image.sh
+```
+
+- start vaadin mysql database docker container
+
+```shell
+./docker-start-vaadin-db.sh 
+```
+
+- start vaadin stock manager docker container
+
+```shell
+./docker-start-vaadin-stock-manager.sh 
+```
+
+- stop and remove all container and images
+
+```shell
+docker stop vaadin-stock-manager
+docker stop vaadin-db
+docker rm vaadin-stock-manager
+docker rm vaadin-db
+docker rmi vaadin-stock-manager
+```
+
+# Start Vaadin from docker compose
+
+
+```shell
+docker-compose up
+```
+
+# Stop Vaadin from docker compose
+
+```shell
+docker-compose down
+docker rmi vaadin-stock-manager
+```
 
 ![image](https://user-images.githubusercontent.com/1216181/118358501-6383fb00-b57f-11eb-9195-01378a6e5bd4.png)
 
