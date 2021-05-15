@@ -126,8 +126,7 @@ public class MainView extends AppLayout {
     	        	
     	});
 
-    	contextMenu.addItem("Logout", e -> {    		
-    		//contextMenu.getUI().ifPresent(ui -> ui.getPage().open("logout"));
+    	contextMenu.addItem("Logout", e -> {
     		contextMenu.getUI().ifPresent(ui -> ui.getPage().setLocation("/logout"));
     	});
     	
