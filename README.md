@@ -1,8 +1,8 @@
 # Description
 
-A Vaadin Flow PoC to manage stock in a organization
+A Vaadin Flow 14 PoC to manage stock in a organization
 
-# frameworks
+# Frameworks
 - Vaadin Spring Boot 2.4.5
 - Vaadin 14.5.4 Flow
 - Vaadin Testbech 14.5.4
@@ -16,36 +16,33 @@ A Vaadin Flow PoC to manage stock in a organization
 
 # Configure database connection
 ```java
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.username=<USERNAME>
 spring.datasource.password=<PASSWORD>
-spring.datasource.url=jdbc:mysql://localhost:3306/training?createDatabaseIfNotExist=true
-spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
 ```
 
-# compile in production mode
+# Compile Vaadin Stock Manager in production mode
 ./build-production.sh
 
-# Start Vaadin from step by step
-- build vaadin docker image
+# Start Vaadin Stock Manager services from step by step
+- build Vaadin Stock Manager docker image
 
 ```shell
 ./docker-compile-image.sh
 ```
 
-- start vaadin mysql database docker container
+- start Vaadin Mysql Database docker container
 
 ```shell
 ./docker-start-vaadin-db.sh 
 ```
 
-- start vaadin stock manager docker container
+- start Vaadin Stock Manager WebApp docker container
 
 ```shell
 ./docker-start-vaadin-stock-manager.sh 
 ```
 
-- stop and remove all container and images
+# Clean Vaadin Stock Manager resources from step by step
 
 ```shell
 docker stop vaadin-stock-manager
@@ -55,17 +52,23 @@ docker rm vaadin-db
 docker rmi vaadin-stock-manager
 ```
 
-# Start Vaadin from docker compose
-
+# Start Vaadin Stock Manager services from docker compose
 
 ```shell
 docker-compose up
 ```
 
-# Stop Vaadin from docker compose
+# Clean Vaadin Stock Manager resources from docker compose
+
+- stop and remove Vaadin Stock Manager services
 
 ```shell
 docker-compose down
+```
+
+- remove Vaadin Stock Manager image
+
+```shell
 docker rmi vaadin-stock-manager
 ```
 
