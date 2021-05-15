@@ -74,8 +74,14 @@ docker rmi vaadin-stock-manager
 
 # Some Vaadin Stock Manager views
 
+- Login view
+
 ![image](https://user-images.githubusercontent.com/1216181/118358501-6383fb00-b57f-11eb-9195-01378a6e5bd4.png)
+
+- Dashboard View
 
 ![image](https://user-images.githubusercontent.com/1216181/118358526-86aeaa80-b57f-11eb-8e62-6ebcd06c7fc7.png)
 
-![image](https://user-images.githubusercontent.com/1216181/118358553-9928e400-b57f-11eb-96d8-1438e1506dd4.png)
+- Product Master view
+
+![image](https://user-images.githubusercontent.com/1216181/118378935-5692f600-b5d7-11eb-8271-3de96e88a939.png)
