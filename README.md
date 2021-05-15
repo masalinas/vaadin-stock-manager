@@ -23,7 +23,7 @@ spring.datasource.password=<PASSWORD>
 # Compile Vaadin Stock Manager in production mode
 ./build-production.sh
 
-# Start Vaadin Stock Manager services from step by step
+# Start/Stop Vaadin Stock Manager services from step by step
 - build Vaadin Stock Manager docker image
 
 ```shell
@@ -42,7 +42,7 @@ spring.datasource.password=<PASSWORD>
 ./docker-start-vaadin-stock-manager.sh 
 ```
 
-# Clean Vaadin Stock Manager resources from step by step
+- clean Vaadin Stock Manager resources from step by step
 
 ```shell
 docker stop vaadin-stock-manager
@@ -52,13 +52,13 @@ docker rm vaadin-db
 docker rmi vaadin-stock-manager
 ```
 
-# Start Vaadin Stock Manager services from docker compose
+# Start/Stop Vaadin Stock Manager services from docker compose
+
+- start Vaadin Stock Manager services
 
 ```shell
 docker-compose up
 ```
-
-# Clean Vaadin Stock Manager resources from docker compose
 
 - stop and remove Vaadin Stock Manager services
 
