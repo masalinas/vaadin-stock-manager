@@ -69,6 +69,8 @@ docker-compose down
 docker rmi vaadin-stock-manager
 ```
 
+# Some Vaadin Stock Manager views
+
 ![image](https://user-images.githubusercontent.com/1216181/118358501-6383fb00-b57f-11eb-9195-01378a6e5bd4.png)
 
 ![image](https://user-images.githubusercontent.com/1216181/118358526-86aeaa80-b57f-11eb-8e62-6ebcd06c7fc7.png)
