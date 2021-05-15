@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  vaadin-db:
+    image: mysql:latest
+    container_name: vaadin-db
+    restart: always
+    volumes:
+      - ./dump:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: underground
+      MYSQL_DATABASE: training
+      MYSQL_USER: stock
+      MYSQL_PASSWORD: training  
+    ports:
+      - 3306:3306
+            
+  vaadin-stock-manager:
+    image: vaadin-stock-manager:latest
+    container_name: vaadin-stock-manager
+    restart: on-failure
+    build: .
+    depends_on:
+      - vaadin-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://vaadin-db:3306/training?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+    ports:
+      - 8080:8080

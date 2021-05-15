@@ -31,7 +31,7 @@ CREATE TABLE `product` (
   `active` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'Banana','Bananas from Canaria','PERISHABLE',10.9,1),(3,'iPhone6','iPhone 6 Apple Mobile','ELECTRONICS',120.9,1);
+INSERT INTO `product` VALUES (1,'Banana Split','Bananas from Canaria','PERISHABLE',10.9,1),(3,'iPhone6','iPhone 6 Apple Mobile','ELECTRONICS',120.9,1);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,4 +112,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-14  1:04:11
+-- Dump completed on 2021-05-15 14:19:05
