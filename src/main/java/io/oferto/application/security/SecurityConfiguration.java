@@ -1,7 +1,10 @@
 package io.oferto.application.security;
 
+import java.util.Properties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @EnableWebSecurity
@@ -51,18 +55,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
 	}
 
-	@Bean
 	@Override
-	public UserDetailsService userDetailsService() {
-		UserDetails user =
-				User.withUsername("admin")
-						.password("{noop}password")
-						.roles("USER")
-						.build();
-
-		return new InMemoryUserDetailsManager(user);
-	}
-
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+            .withUser("admin").password("{noop}password").roles("ADMIN").and()
+            .withUser("operator").password("{noop}password").roles("USER");
+    }
+	
 	/**
 	 * Allows access to static resources, bypassing Spring security.
 	 */
