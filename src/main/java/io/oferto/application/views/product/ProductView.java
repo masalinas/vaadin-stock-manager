@@ -21,13 +21,14 @@ import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.RouteAlias;
 
 import io.oferto.application.backend.model.Product;
 import io.oferto.application.backend.service.ProductService;
 import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.product.form.ProductForm;
+import io.oferto.application.components.AuthenticatedButton;
+import io.oferto.application.security.SecurityConfiguration;
 
 @Route(value = "products", layout = MainView.class)
 @PageTitle("Stock Manager | Product Master")
@@ -44,7 +45,7 @@ public class ProductView extends VerticalLayout {
 	
 	private HorizontalLayout toolBarLayout;
 	private Button refreshProducts;
-	private Button addProduct;
+	private AuthenticatedButton addProduct;
 	private Grid<Product> gridProduct = new Grid<>(Product.class); 
 	
 	public ProductView(WarehouseService warehouseService, ProductService productService) {
@@ -89,7 +90,7 @@ public class ProductView extends VerticalLayout {
 		toolBarLayout.setPadding(true);
 		toolBarLayout.setWidthFull();
 		
-		addProduct = new Button("Add Product", clickEvent -> createProductButton(clickEvent));		
+		addProduct = new AuthenticatedButton("Add Product", clickEvent -> createProductButton(clickEvent));		
 		addProduct.getElement().getStyle().set("margin-right", "auto");
 		addProduct.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		
@@ -121,8 +122,11 @@ public class ProductView extends VerticalLayout {
                 )
         ).setHeader("Active").setKey("active");
 		
-		gridProduct.addComponentColumn(item -> updateProductButton(gridProduct, item)).setHeader("");
-		gridProduct.addComponentColumn(item -> removeRemoveButton(gridProduct, item)).setHeader("");
+		if (SecurityConfiguration.isAdmin()) {
+			gridProduct.addComponentColumn(item -> updateProductButton(gridProduct, item)).setHeader("");
+			gridProduct.addComponentColumn(item -> removeRemoveButton(gridProduct, item)).setHeader("");
+		}
+		
 		gridProduct.addThemeVariants(GridVariant.LUMO_NO_BORDER, 
 									 GridVariant.LUMO_NO_ROW_BORDERS, 
 									 GridVariant.LUMO_ROW_STRIPES);
@@ -177,7 +181,7 @@ public class ProductView extends VerticalLayout {
 	}
 	
 	private Button updateProductButton(Grid<Product> grid, Product product) {
-	    Button button = new Button("Update", clickEvent -> {
+		AuthenticatedButton button = new AuthenticatedButton("Update", clickEvent -> {
 	    	// define form dialog
 	    	ProductForm productForm = new ProductForm(this.warehouseService);
 	    	productForm.setWidth("700px");

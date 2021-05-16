@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +26,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String LOGIN_URL = "/login";
 	private static final String LOGOUT_SUCCESS_URL = "/login";
 
+	private static UserDetails userDetails;
+	
 	/**
 	 * Require login to access internal pages and configure login form.
 	 */
@@ -62,6 +66,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .withUser("operator").password("{noop}password").roles("USER");
     }
 	
+	public static boolean isAdmin() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+    	if (principal instanceof UserDetails) {
+    		userDetails = ((UserDetails)principal);
+    	
+	    	for(GrantedAuthority granted : userDetails.getAuthorities()) { 
+	    		if (granted.getAuthority().equals("ROLE_ADMIN"))
+	    			return true;
+	    	}
+    	}
+    	
+    	return false;
+	}
+	
+	public static UserDetails getUserDetails() {
+		return (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();		
+	}
+		
 	/**
 	 * Allows access to static resources, bypassing Spring security.
 	 */

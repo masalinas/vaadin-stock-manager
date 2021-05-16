@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -27,6 +22,7 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 
+import io.oferto.application.security.SecurityConfiguration;
 import io.oferto.application.views.about.AboutView;
 import io.oferto.application.views.dashboard.DashboardView;
 import io.oferto.application.views.main.MainView;
@@ -47,18 +43,13 @@ import com.vaadin.flow.component.dependency.CssImport;
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
 
-	private UserDetails userDetails;
+	//private UserDetails userDetails;
     private final Tabs menu;
     private H1 viewTitle;
 
     public MainView() {
         setPrimarySection(Section.DRAWER);
-        
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
-    	if (principal instanceof UserDetails)
-    		userDetails = ((UserDetails)principal);
-      	  
+                  
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));                
@@ -119,22 +110,13 @@ public class MainView extends AppLayout {
     	List<Tab> tabs = new ArrayList<Tab>();
     	
     	tabs.add(createTab("Dashboard", DashboardView.class));
-    	if (isAdmin())
+    	if (SecurityConfiguration.isAdmin())
     		tabs.add(createTab("Warehouse", WarehouseView.class));
     	tabs.add(createTab("Product Master", ProductView.class));
     	tabs.add(createTab("Stock List", StockView.class));
     	tabs.add(createTab("About", AboutView.class));
     	    	
     	return tabs.toArray(new Tab[tabs.size()]);
-    }
-
-    private boolean isAdmin() {
-    	for(GrantedAuthority granted : this.userDetails.getAuthorities()) { 
-    		if (granted.getAuthority().equals("ROLE_ADMIN"))
-    			return true;
-    	}
-    	
-    	return false;
     }
     
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
@@ -146,17 +128,14 @@ public class MainView extends AppLayout {
 
     private Component createAvatarMenu() {    	
     	// get security context    	
-    	Avatar avatar = new Avatar();
-    	
-    	if (userDetails != null)
-    		avatar.setName(userDetails.getUsername());
+    	Avatar avatar = new Avatar();    	
+    	avatar.setName(SecurityConfiguration.getUserDetails().getUsername());
     	
     	ContextMenu contextMenu = new ContextMenu();
     	contextMenu.setOpenOnClick(true);
     	contextMenu.setTarget(avatar);
     	
-    	contextMenu.addItem("Profile", e -> {
-    	        	
+    	contextMenu.addItem("Profile", e -> {    	        	
     	});
 
     	contextMenu.addItem("Logout", e -> {

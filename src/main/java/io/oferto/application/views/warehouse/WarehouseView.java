@@ -107,6 +107,7 @@ public class WarehouseView extends VerticalLayout {
 
 		gridWarehouse.addComponentColumn(item -> updateWarehouseButton(gridWarehouse, item)).setHeader("");
 		gridWarehouse.addComponentColumn(item -> removeWarehouseButton(gridWarehouse, item)).setHeader("");
+		
 		gridWarehouse.addThemeVariants(GridVariant.LUMO_NO_BORDER, 
 									 GridVariant.LUMO_NO_ROW_BORDERS, 
 									 GridVariant.LUMO_ROW_STRIPES);

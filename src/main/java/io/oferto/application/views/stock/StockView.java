@@ -33,6 +33,8 @@ import io.oferto.application.backend.service.StockService;
 import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
 import io.oferto.application.views.stock.form.StockForm;
+import io.oferto.application.components.AuthenticatedButton;
+import io.oferto.application.security.SecurityConfiguration;
 
 @Route(value = "stock", layout = MainView.class)
 @PageTitle("Stock Manager | Stock List")
@@ -50,7 +52,7 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 	
 	private HorizontalLayout toolBarLayout;
 	private Button refreshStock;
-	private Button addStock;
+	private AuthenticatedButton addStock;
 	private Grid<Stock> gridStock = new Grid<>(Stock.class);
 	
 	public StockView(WarehouseService warehouseService, ProductService productService, StockService stockService) {
@@ -140,7 +142,7 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 		toolBarLayout.setPadding(true);
 		toolBarLayout.setWidthFull();
 		
-		addStock = new Button("Add Stock", clickEvent -> createStockButton(clickEvent));
+		addStock = new AuthenticatedButton("Add Stock", clickEvent -> createStockButton(clickEvent));
 		
 		addStock.getElement().getStyle().set("margin-right", "auto");
 		addStock.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -162,8 +164,11 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 		gridStock.getColumnByKey("product.warehouse.name").setHeader("Warehouse");
 		gridStock.getColumnByKey("product.name").setFooter("Total: " + this.stock.size() + " stock lines");		
 		
-		gridStock.addComponentColumn(item -> updateStockButton(gridStock, item)).setHeader("");
-		gridStock.addComponentColumn(item -> removeStockButton(gridStock, item)).setHeader("");
+		if (SecurityConfiguration.isAdmin()) {
+			gridStock.addComponentColumn(item -> updateStockButton(gridStock, item)).setHeader("");
+			gridStock.addComponentColumn(item -> removeStockButton(gridStock, item)).setHeader("");
+		}
+		
 		gridStock.addThemeVariants(GridVariant.LUMO_NO_BORDER, 
 								   GridVariant.LUMO_NO_ROW_BORDERS, 
 								   GridVariant.LUMO_ROW_STRIPES);
@@ -204,7 +209,7 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 	}
 	
 	private Button updateStockButton(Grid<Stock> grid, Stock stock) {
-		Button button = new Button("Update", clickEvent -> {
+		AuthenticatedButton button = new AuthenticatedButton("Update", clickEvent -> {
 			// define form dialog
 	    	StockForm stockForm = new StockForm(productService);
 	    	stockForm.setWidth("700px");
