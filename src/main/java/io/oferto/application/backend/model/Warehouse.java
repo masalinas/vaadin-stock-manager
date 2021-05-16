@@ -8,17 +8,19 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 public class Warehouse extends AbstractEntity {
-	@NotNull
+	@NotEmpty(message = "Name is required")
 	private String name;
 	
 	private String address;
 	
-	@NotNull
+	@NotNull(message = "Longitude is required")
 	private Double longitude;
 	
-	@NotNull
+	@NotNull(message = "Latitude is required")
 	private Double latitude;
 	
 	@OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY)

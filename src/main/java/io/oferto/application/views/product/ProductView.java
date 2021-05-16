@@ -107,9 +107,13 @@ public class ProductView extends VerticalLayout {
 	private void configureGrid() {
 		loadGrid();
 		
+		gridProduct.setSizeFull();
 		gridProduct.setColumns("warehouse.name", "name", "description", "family", "price");
-		gridProduct.getColumnByKey("warehouse.name").setHeader("Warehouse");
-		gridProduct.getColumnByKey("name").setFooter("Total: " + this.products.size() + " products");		
+		gridProduct.getColumnByKey("warehouse.name").setFlexGrow(0).setWidth("200px").setHeader("Warehouse").setFooter("Total: " + this.products.size() + " products");
+		gridProduct.getColumnByKey("name").setFlexGrow(0).setWidth("200px").setHeader("Name");
+		gridProduct.getColumnByKey("description").setFlexGrow(1).setHeader("Description");
+		gridProduct.getColumnByKey("family").setFlexGrow(0).setWidth("150px").setHeader("Family");
+		gridProduct.getColumnByKey("price").setFlexGrow(0).setWidth("100px").setHeader("Price");
 		gridProduct.addColumn(
                 new ComponentRenderer<>(
                         product -> {
@@ -120,11 +124,11 @@ public class ProductView extends VerticalLayout {
                             return checkbox;
                         }
                 )
-        ).setHeader("Active").setKey("active");
+        ).setHeader("Active").setKey("active").setFlexGrow(0).setWidth("80px").setHeader("Active");
 		
 		if (SecurityConfiguration.isAdmin()) {
-			gridProduct.addComponentColumn(item -> updateProductButton(gridProduct, item)).setHeader("");
-			gridProduct.addComponentColumn(item -> removeRemoveButton(gridProduct, item)).setHeader("");
+			gridProduct.addComponentColumn(item -> updateProductButton(gridProduct, item)).setFlexGrow(0).setWidth("120px").setHeader("");
+			gridProduct.addComponentColumn(item -> removeRemoveButton(gridProduct, item)).setFlexGrow(0).setWidth("120px").setHeader("");
 		}
 		
 		gridProduct.addThemeVariants(GridVariant.LUMO_NO_BORDER, 

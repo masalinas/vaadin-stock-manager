@@ -10,9 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 public class Product extends AbstractEntity implements Cloneable {
 	public enum Family {
@@ -33,23 +33,23 @@ public class Product extends AbstractEntity implements Cloneable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "warehouse_id")	
+	@JoinColumn(name = "warehouse_id")
+	@NotNull(message = "Warehouse is required")
 	private Warehouse warehouse;
 	
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "Name is required")
 	private String name;
     
 	private String description;
 
 	@Enumerated(EnumType.STRING)
-	@NotNull	 
+	@NotNull(message = "Family is required")
 	private Family family;
 		
-	@NotNull
+	@NotNull(message = "Price is required")
 	private Double price;
 	
-	@NotNull
+	@NotNull(message = "Active is required")
 	private boolean active = true;
 	
 	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)

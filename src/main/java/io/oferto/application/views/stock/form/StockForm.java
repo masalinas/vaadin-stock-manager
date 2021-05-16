@@ -13,13 +13,14 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 
 import io.oferto.application.backend.model.Stock;
 import io.oferto.application.backend.model.Stock.Status;
@@ -35,7 +36,7 @@ public class StockForm extends Dialog {
 	private ProductService productService;
 	
 	private Stock stock;	
-	private Binder<Stock> stockBinder = new Binder<Stock>(Stock.class);
+	private Binder<Stock> stockBinder = new BeanValidationBinder<Stock>(Stock.class);
 	
 	private FormLayout formLayout;
 	
@@ -88,37 +89,64 @@ public class StockForm extends Dialog {
     
     private Component createFormLayout() {
 		formLayout = new FormLayout();
+		formLayout.setWidthFull();
 		
-		// define form fields			
+		formLayout.setResponsiveSteps(
+	        new ResponsiveStep("1px", 1),
+	        new ResponsiveStep("600px", 2),
+	        new ResponsiveStep("700px", 3));
+		
+		
+		// define form fields
+		product = new ComboBox<Product>();		
+		product.setId("product");
+		product.setItemLabelGenerator(Product::getName);
+		product.setLabel("Product");
+		product.setItems(getProducts());
+		product.setWidth("300px");		
+		stockBinder.forField(product).asRequired("Stock is required");
+		
+		HorizontalLayout row01 = new HorizontalLayout();
+		row01.setPadding(false);
+		row01.setMargin(false);
+		
 		lot = new TextField();
 		lot.setId("lot");			
-		lot.setLabel("Lot");		
-		
-		serialNumber = new TextField();
-		serialNumber.setId("serial-number");	
-		serialNumber.setLabel("Serial number");
-				
+		lot.setLabel("Lot");				
+		lot.setWidth("200px");
+						
 		expirationDate = new DatePicker();
 		expirationDate.setClearButtonVisible(true);
 		expirationDate.setId("expiration-date");	
 		expirationDate.setLabel("Expiration date");
+		expirationDate.setWidth("150px");
+		
+		serialNumber = new TextField();
+		serialNumber.setId("serial-number");	
+		serialNumber.setLabel("Serial number");	
+		
+		row01.add(lot,expirationDate, serialNumber);
+		row01.setFlexGrow(1, serialNumber);
+		formLayout.setColspan(row01, 2);
+		
+		HorizontalLayout row02 = new HorizontalLayout();
+		row02.setPadding(false);
+		row02.setMargin(false);
 		
 		quantity = new NumberField();
 		quantity.setId("quantity");
 		quantity.setLabel("Quantity");
+		stockBinder.forField(quantity).asRequired("Quantity is required");
 		
 		status = new ComboBox<Status>();		
 		status.setId("status");
 		status.setLabel("Status");
 		status.setItems(Status.values());
+		stockBinder.forField(status).asRequired("Status is required");
 		
-		product = new ComboBox<Product>();		
-		product.setId("product");
-		product.setItemLabelGenerator(Product::getName);
-		product.setLabel("Product");
-		product.setItems(getProducts());			
+		row02.add(quantity, status);
 		
-		formLayout.add(product, lot, serialNumber, quantity, status, expirationDate);
+		formLayout.add(product, row01, row02);
 			
 		return formLayout;
 	}
@@ -127,17 +155,11 @@ public class StockForm extends Dialog {
 		Button saveButton = new Button("Confirm", event -> {
 			// retreive the product updated from form
 			this.dialogResult = DIALOG_RESULT.SAVE;			
-			
-			try {
-				stockBinder.writeBean(stock);
+						
+			if (stockBinder.writeBeanIfValid(stock)) {
 				stock.setWarehouse(stock.getProduct().getWarehouse());
-				
-		        close();
-		    } catch (ValidationException ex) {
-		        ex.printStackTrace();
-		        
-		        logger.error(ex.getMessage());
-		    }					   
+				close();				   
+			}
 		});
 		saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		saveButton.addClickShortcut(Key.ENTER).listenOn(this);

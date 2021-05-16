@@ -101,12 +101,13 @@ public class WarehouseView extends VerticalLayout {
 	private void configureGrid() {
 		loadGrid();
 		
+		gridWarehouse.setSizeFull();
 		gridWarehouse.setColumns("name", "address");
-		gridWarehouse.getColumnByKey("name").setHeader("Warehouse");
-		gridWarehouse.getColumnByKey("address").setFooter("Total: " + this.warehouses.size() + " warehouses");		
-
-		gridWarehouse.addComponentColumn(item -> updateWarehouseButton(gridWarehouse, item)).setHeader("");
-		gridWarehouse.addComponentColumn(item -> removeWarehouseButton(gridWarehouse, item)).setHeader("");
+		gridWarehouse.getColumnByKey("name").setFlexGrow(0).setWidth("300px").setHeader("Warehouse").setFooter("Total: " + this.warehouses.size() + " warehouses");
+		gridWarehouse.getColumnByKey("address").setFlexGrow(1).setHeader("Address");		
+		
+		gridWarehouse.addComponentColumn(item -> updateWarehouseButton(gridWarehouse, item)).setFlexGrow(0).setWidth("120px").setHeader("");
+		gridWarehouse.addComponentColumn(item -> removeWarehouseButton(gridWarehouse, item)).setFlexGrow(0).setWidth("120px").setHeader("");
 		
 		gridWarehouse.addThemeVariants(GridVariant.LUMO_NO_BORDER, 
 									 GridVariant.LUMO_NO_ROW_BORDERS, 

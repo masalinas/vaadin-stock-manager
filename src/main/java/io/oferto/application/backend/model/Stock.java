@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 public class Stock extends AbstractEntity {
 	public enum Status {
@@ -33,6 +35,7 @@ public class Stock extends AbstractEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id")	
+	@NotNull(message = "Product is required")
 	private Product product;
 			
 	private LocalDate expirationDate;
@@ -42,10 +45,11 @@ public class Stock extends AbstractEntity {
 	private String serialNumber;	
 	
 	@NotNull
+	@NotNull(message = "Quantity is required")
 	private Double quantity;
 	
 	@Enumerated(EnumType.STRING)
-	@NotNull
+	@NotNull(message = "Status is required")
 	private Status status;	
 	
 	public Warehouse getWarehouse() {

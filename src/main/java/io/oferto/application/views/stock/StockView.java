@@ -161,12 +161,17 @@ public class StockView extends VerticalLayout implements HasUrlParameter<String>
 		loadGrid();
 		
 		gridStock.setColumns("product.warehouse.name", "product.name", "quantity", "expirationDate", "lot", "serialNumber", "status");
-		gridStock.getColumnByKey("product.warehouse.name").setHeader("Warehouse");
-		gridStock.getColumnByKey("product.name").setFooter("Total: " + this.stock.size() + " stock lines");		
+		gridStock.getColumnByKey("product.warehouse.name").setFlexGrow(0).setWidth("200px").setHeader("Warehouse").setFooter("Total: " + this.stock.size() + " stock lines");
+		gridStock.getColumnByKey("product.name").setFlexGrow(1).setHeader("Name");
+		gridStock.getColumnByKey("quantity").setFlexGrow(0).setWidth("120px").setHeader("Quantity");
+		gridStock.getColumnByKey("lot").setFlexGrow(0).setWidth("130px").setHeader("Lot");
+		gridStock.getColumnByKey("expirationDate").setFlexGrow(0).setWidth("130px").setHeader("Expiration date");
+		gridStock.getColumnByKey("serialNumber").setFlexGrow(0).setWidth("130px").setHeader("Serial Number");
+		gridStock.getColumnByKey("status").setFlexGrow(0).setWidth("120px").setHeader("Status");
 		
 		if (SecurityConfiguration.isAdmin()) {
-			gridStock.addComponentColumn(item -> updateStockButton(gridStock, item)).setHeader("");
-			gridStock.addComponentColumn(item -> removeStockButton(gridStock, item)).setHeader("");
+			gridStock.addComponentColumn(item -> updateStockButton(gridStock, item)).setFlexGrow(0).setWidth("120px").setHeader("");
+			gridStock.addComponentColumn(item -> removeStockButton(gridStock, item)).setFlexGrow(0).setWidth("120px").setHeader("");
 		}
 		
 		gridStock.addThemeVariants(GridVariant.LUMO_NO_BORDER, 
