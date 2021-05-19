@@ -21,6 +21,9 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.material.Material;
 
 import io.oferto.application.security.SecurityConfiguration;
 import io.oferto.application.views.about.AboutView;
@@ -41,6 +44,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 @JsModule("./styles/shared-styles.js")
 @CssImport("lumo-css-framework/all-classes.css")
 @CssImport("./views/main/main-view.css")
+@Theme(value = Lumo.class)
 public class MainView extends AppLayout {
 
 	//private UserDetails userDetails;

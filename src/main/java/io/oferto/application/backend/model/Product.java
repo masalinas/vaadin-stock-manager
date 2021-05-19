@@ -13,8 +13,9 @@ import javax.persistence.OneToMany;
 
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
-public class Product extends AbstractEntity implements Cloneable {
+public class Product extends AbstractEntity {
 	public enum Family {
 		PERISHABLE("Perishable"),
 		ELECTRONICS("Electronic"),

@@ -1,8 +1,0 @@
-/* resolver bluer image on chrome */ 
-#vaadinLoginUsername input {
-	-webkit-mask-image: none;
-}
-
-#vaadinLoginPassword input {
-	-webkit-mask-image: none;
-}

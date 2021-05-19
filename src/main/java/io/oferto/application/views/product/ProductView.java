@@ -204,7 +204,6 @@ public class ProductView extends VerticalLayout {
 	    	    	 		productService.save(productForm.getProduct());
 	    	    	 		
 	    	    	 		// refresh grid
-	    	    	 		//loadGrid();
 	    	    	 		refreshProducts(null);
 	    	    	 		
 		    	    	 	Notification.show("Product Updated", NOTIFICATION_DEFAULT_DURATION, Notification.Position.TOP_END);

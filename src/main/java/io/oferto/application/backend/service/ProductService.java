@@ -14,15 +14,6 @@ public class ProductService {
 	private static final Logger LOGGER = Logger.getLogger(ProductService.class.getName());
 	private ProductRepository productRepository;
 	
-	/*private List<Product> products = new ArrayList<Product>() {
-		{
-			add(new Product("Banana", "Banana fruit", LocalDate.of(2021, 6, 11), 10.0f, true));
-			add(new Product("Orange", "Orange fruit", LocalDate.of(2021, 8, 12), 8.0f, true));
-			add(new Product("Pear", "Pear fruit", LocalDate.of(2021, 9, 9), 12.0f, false));
-			add(new Product("Melon", "Melon fruit", LocalDate.of(2021, 1, 07), 15.0f, true));
-		}
-	};*/
-	
 	public ProductService(ProductRepository productRepository) {
 		this.productRepository = productRepository;
 	}
