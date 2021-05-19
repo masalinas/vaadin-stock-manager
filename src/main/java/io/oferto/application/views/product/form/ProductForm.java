@@ -112,7 +112,7 @@ public class ProductForm extends Dialog {
 		warehouse.setItems(getWarehouses());
 		warehouse.setAutofocus(true);
 		warehouse.setWidth("300px");		
-		productBinder.forField(warehouse).asRequired("Warehouse is required");
+		productBinder.forField(warehouse);
 		
 		active = new Checkbox();
 		active.setId("active");
@@ -131,7 +131,7 @@ public class ProductForm extends Dialog {
 		name.setId("name");			
 		name.setLabel("Name");
 		name.setWidth("300px");		
-		productBinder.forField(name).withNullRepresentation("").asRequired("Name is required");
+		productBinder.forField(name).withNullRepresentation("");
 		
 		row02.add(name);
 				
@@ -148,14 +148,14 @@ public class ProductForm extends Dialog {
 		family.setId("family");
 		family.setLabel("Family");
 		family.setItems(Family.values());
-		productBinder.forField(family).asRequired("Family is required");
+		productBinder.forField(family);
 		
 		price = new NumberField();
 		price.setId("price");
 		price.setLabel("Price");
 		price.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
 		price.setPrefixComponent(new Icon(VaadinIcon.EURO));
-		productBinder.forField(price).asRequired("Price is required");
+		productBinder.forField(price);
 		
 		row04.add(family, price);
 		

@@ -29,7 +29,6 @@ import io.oferto.application.backend.service.StockService;
 import io.oferto.application.backend.service.WarehouseService;
 import io.oferto.application.views.main.MainView;
 
-//@Route(value = "", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
 @Route(value = "dashboard", layout = MainView.class)
 @PageTitle("Stock Manager | Dashboard")
