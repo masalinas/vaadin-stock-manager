@@ -1,11 +1,11 @@
 package io.oferto.application.security;
 
+import org.springframework.stereotype.Component;
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
-
-import org.springframework.stereotype.Component;
 
 import io.oferto.application.views.login.LoginView;
 

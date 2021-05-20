@@ -86,7 +86,6 @@ public class DashboardView extends VerticalLayout {
 				 marker.bindTooltip(warehouse.getName());
 				 marker.setAttribution(warehouse.getId().toString());
 				 marker.onClick((event) -> {					 
-					 //Notification.show(marker.getAttribution());
 					 showWarehouseStock(marker.getAttribution());
 				 });
 				 
@@ -102,10 +101,9 @@ public class DashboardView extends VerticalLayout {
 	}	
 	
 	private void showWarehouseStock(String warehouseId) {		
-		Map<String, List<String>> queryParameters = new HashMap<String, List<String>>()
-		{
-		    {
-		        put("warehouseId",Arrays.asList(warehouseId));
+		Map<String, List<String>> queryParameters = new HashMap<String, List<String>>() {
+		    { 
+		    	put("warehouseId",Arrays.asList(warehouseId));
 		    }
 		};
 		
