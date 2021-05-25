@@ -134,6 +134,7 @@ public class MainView extends AppLayout {
     	// get security context    	
     	Avatar avatar = new Avatar();    	
     	avatar.setName(SecurityConfiguration.getUserDetails().getUsername());
+    	//avatar.setImage("https://www.pikpng.com/pngl/m/5-53300_png-file-user-icon-clipart.png%22");
     	
     	ContextMenu contextMenu = new ContextMenu();
     	contextMenu.setOpenOnClick(true);
